@@ -1,0 +1,21 @@
+<h3>Sing up</h3>
+<form action="/register" method="POST">
+
+  <label for="username"><b>Username</b></label>
+  <input  id="username" type="text" placeholder="Enter Username" name="username">
+
+  <label for="password"><b>Password</b></label>
+  <input id="password" type="password" placeholder="Enter Password" name="password">
+
+    <label for="repeat_password"><b>Password</b></label>
+    <input id="repeat_password" type="password" placeholder="Repeat password" name="repeat_password">
+
+
+
+    <div style="display: flex; align-items: center">
+        <input type="submit" value="Sing up" class="btn">
+        <a href="/login" class="<%= isActiveRoute('/login', currentRoute) %>" style="margin-left: 15px">Sing in</a>
+    </div>
+
+</form>
+
