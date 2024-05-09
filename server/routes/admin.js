@@ -44,7 +44,7 @@ router.get('/admin', async (req, res) => {
       description: "Simple Blog created with NodeJs, Express & MongoDb."
     }
 
-    res.render('admin/index', { locals, layout: adminLayout });
+    res.render('admin/index', {isAuthenticated: Boolean(req.cookies.token), locals, layout: adminLayout });
   } catch (error) {
     console.log(error);
   }
@@ -95,6 +95,7 @@ router.get('/admin/dashboard', adminAuthMiddleware, async (req, res) => {
 
     const data = await Post.find();
     res.render('admin/dashboard', {
+      isAuthenticated: Boolean(req.cookies.token),
       locals,
       data,
       layout: adminLayout
@@ -120,6 +121,7 @@ router.get('/add-post', adminAuthMiddleware, async (req, res) => {
 
     const data = await Post.find();
     res.render('admin/add-post', {
+      isAuthenticated: Boolean(req.cookies.token),
       locals,
       layout: adminLayout
     });
@@ -170,6 +172,7 @@ router.get('/edit-post/:id', adminAuthMiddleware, async (req, res) => {
     const data = await Post.findOne({ _id: req.params.id });
 
     res.render('admin/edit-post', {
+      isAuthenticated: Boolean(req.cookies.token),
       locals,
       data,
       layout: adminLayout
@@ -255,7 +258,7 @@ router.get('/admin/register', async (req, res) => {
           description: "Simple Blog created with NodeJs, Express & MongoDb."
         }
 
-        res.render('admin/admin-register', {layout: adminLayout});
+        res.render('admin/admin-register', {isAuthenticated: Boolean(req.cookies.token),layout: adminLayout});
       } catch (error) {
         console.log(error);
       }

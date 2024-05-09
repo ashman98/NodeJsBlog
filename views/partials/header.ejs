@@ -12,12 +12,14 @@
       <li>
         <a href="/contact" class="<%= isActiveRoute('/contact', currentRoute) %>">Contact</a>
       </li>
-      <li>
-        <a href="/login" class="<%= isActiveRoute('/login', currentRoute) %>">Sing in</a>
-      </li>
-      <% if (isAuthorized) {%>
+
+      <% if (isAuthenticated) {%>
         <li>
-          <a href="/logout" class="<%= isActiveRoute('/logout', currentRoute) %>">Admin</a>
+          <a href="/logout" class="<%= isActiveRoute('/logout', currentRoute) %>">Logout</a>
+        </li>
+      <% }else{ %>
+        <li>
+          <a href="/login" class="<%= isActiveRoute('/login', currentRoute) %>">Sing in</a>
         </li>
       <% } %>
     </ul>
