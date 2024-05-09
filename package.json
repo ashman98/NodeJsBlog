@@ -27,6 +27,7 @@
   "homepage": "https://github.com/ashman98/NodeJsBlog#readme",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "chalk": "^5.3.0",
     "connect-mongo": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.4.5",
@@ -34,8 +35,11 @@
     "express": "^4.19.2",
     "express-ejs-layouts": "^2.5.1",
     "express-session": "^1.18.0",
+    "install": "^0.13.0",
     "jsonwebtoken": "^9.0.2",
     "method-override": "^3.0.0",
-    "mongoose": "^8.3.3"
+    "mongodb": "^6.6.1",
+    "mongoose": "^8.3.3",
+    "npm": "^10.7.0"
   }
 }
