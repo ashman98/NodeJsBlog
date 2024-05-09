@@ -12,7 +12,7 @@
 <body>
   
   <div class="container">
-    <%- include('../partials/header_admin.ejs', {isAuthorized: isAuthorized})  %>
+    <%- include('../partials/header_admin.ejs', {isAuthenticated: isAuthenticated})  %>
     <main class="main">
       <%- body %>
     </main>

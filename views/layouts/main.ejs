@@ -13,7 +13,7 @@
   
   <%- include('../partials/search.ejs')  %>
   <div class="container">
-    <%- include('../partials/header.ejs', {isAuthorized: isAuthorized})  %>
+    <%- include('../partials/header.ejs', {isAuthenticated: isAuthenticated})  %>
     <main class="main">
       <%- body %>
     </main>

@@ -23,7 +23,6 @@ router.get('', async (req, res) => {
       description: "Simple Blog created with NodeJs, Express & MongoDb. About the life of street dogs"
     }
 
-    const token = req.cookies.token
     const role = req.cookies.role;
 
     let perPage = 10;
@@ -46,7 +45,7 @@ router.get('', async (req, res) => {
       current: page,
       nextPage: hasNextPage ? nextPage : null,
       currentRoute: '/',
-      isAuthorized: token,
+      isAuthenticated: Boolean(req.cookies.token),
       layout: role === ADMIN_ROLE ? adminLayout : mainLayout
     });
 
@@ -67,7 +66,7 @@ router.get('/login', async (req, res) => {
           description: "Simple Blog created with NodeJs, Express & MongoDb."
         }
 
-        res.render('login', {locals, currentRoute: '/login'});
+        res.render('login', {isAuthenticated: Boolean(req.cookies.token), locals, currentRoute: '/login'});
       } catch (error) {
         console.log(error);
       }
@@ -84,7 +83,7 @@ router.get('/register', async (req, res) => {
           description: "Simple Blog created with NodeJs, Express & MongoDb."
         }
 
-        res.render('register', {locals, currentRoute: '/register'});
+        res.render('register', {isAuthenticated: Boolean(req.cookies.token), locals, currentRoute: '/register'});
       } catch (error) {
         console.log(error);
       }
@@ -184,7 +183,8 @@ router.get('/post/:id', async (req, res) => {
       description: "Simple Blog created with NodeJs, Express & MongoDb.",
     }
 
-    res.render('post', { 
+    res.render('post', {
+      isAuthenticated: Boolean(req.cookies.token),
       locals,
       data,
       currentRoute: `/post/${slug}`
@@ -218,6 +218,7 @@ router.post('/search', async (req, res) => {
     });
 
     res.render("search", {
+      isAuthenticated: Boolean(req.cookies.token),
       data,
       locals,
       currentRoute: '/'
@@ -236,6 +237,7 @@ router.post('/search', async (req, res) => {
 */
 router.get('/about', (req, res) => {
   res.render('about', {
+    isAuthenticated: Boolean(req.cookies.token),
     currentRoute: '/about'
   });
 });
