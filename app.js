@@ -1,21 +1,37 @@
 require('dotenv').config();
 
 const express = require('express');
+// const   chalk = require('chalk');
+const   fs = require( 'fs' );
+
 const expressLayout = require('express-ejs-layouts');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-
-const connectDB = require('./server/config/db');
 const { isActiveRoute } = require('./server/helpers/routeHelpers');
 
-const app = express();
-const PORT = process.env.PORT || 5000;
-  
-// Connect to DB
-connectDB();
+const start = Date.now(),
+    protocol = process.env.PROTOCOL || 'https',
+    port = process.env.PORT || '3000',
+    host = process.env.HOST || 'localhost';
 
+let server;
+
+function sendBootStatus( status ) {
+  // don't send anything if we're not running in a fork
+  if ( ! process.send ) {
+    return;
+  }
+  process.send( { boot: status } );
+}
+
+
+
+
+const app = express();
+
+// Connect to DB
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
@@ -45,6 +61,49 @@ app.locals.isActiveRoute = isActiveRoute;
 app.use('/', require('./server/routes/main'));
 app.use('/', require('./server/routes/admin'));
 
-app.listen(PORT, ()=> {
-  console.log(`App listening on port ${PORT}`);
-});
+
+// Start a development HTTPS server.
+if ( protocol === 'https' ) {
+  const { execSync } = require( 'child_process' );
+  const execOptions = { encoding: 'utf-8', windowsHide: true };
+  let key = './certs/key.pem';
+  let certificate = './certs/certificate.pem';
+
+  if ( ! fs.existsSync( key ) || ! fs.existsSync( certificate ) ) {
+    try {
+      execSync( 'openssl version', execOptions );
+      execSync(
+          `openssl req -x509 -newkey rsa:2048 -keyout ./certs/key.tmp.pem -out ${ certificate } -days 365 -nodes -subj "/C=US/ST=Foo/L=Bar/O=Baz/CN=localhost"`,
+          execOptions
+      );
+      execSync( `openssl rsa -in ./certs/key.tmp.pem -out ${ key }`, execOptions );
+      execSync( 'rm ./certs/key.tmp.pem', execOptions );
+    } catch ( error ) {
+      console.error( error );
+    }
+  }
+
+  const options = {
+    key: fs.readFileSync( key ),
+    cert: fs.readFileSync( certificate ),
+    passphrase : 'password'
+  };
+
+  server = require( 'https' ).createServer( options, app );
+
+} else {
+  server = require( 'http' ).createServer( app );
+}
+
+server.listen( { port }, function() {
+  // Tell the parent process that Server has booted.
+  sendBootStatus( 'ready' );
+} );
+
+const connectDB = require('./server/config/db');
+
+connectDB();
+
+// app.listen(PORT, ()=> {
+//   console.log(`App listening on port ${PORT}`);
+// });
