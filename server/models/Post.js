@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
+
 const PostSchema = new Schema({
   title: {
     type: String,
@@ -10,6 +11,22 @@ const PostSchema = new Schema({
     type: String,
     required: true
   },
+  comments: [
+      {
+        text: {
+          type: String,
+          required: true
+        },
+        authorID: {
+          type: String,
+          required: true
+        },
+        date: {
+          type: Date,
+          default: Date.now
+        }
+    }
+  ],
   createdAt: {
     type: Date,
     default: Date.now
@@ -20,4 +37,5 @@ const PostSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model('Post', PostSchema);
+const Post = mongoose.model('Post', PostSchema);
+module.exports = {Post}

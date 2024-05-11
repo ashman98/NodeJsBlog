@@ -1,2 +1,17 @@
 <h1><%= data.title %></h1>
 <article class="article"><%= data.body %></article>
+
+<div class="comments-block">
+    <h4>Comments</h4>
+    <form style="display: flex" action="/addComment" method="POST">
+        <textarea placeholder="Your comment" name="comment"></textarea>
+        <input type="hidden" value="<%=data.id%>" name="post_id">
+        <input type="submit" value="Send" class="btn" >
+    </form>
+
+    <div>
+        <% data.comments.forEach(function(comment){ %>
+            <p><%=comment.text%></p>
+        <% }); %>
+    </div>
+</div>

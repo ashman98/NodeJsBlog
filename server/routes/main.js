@@ -1,15 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const Post = require('../models/Post');
+const {Post, Comment} = require('../models/Post');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const jwtSecret = process.env.JWT_SECRET;
+const mongoose = require('mongoose');
 
 const adminLayout = '../views/layouts/admin';
 const mainLayout = '../views/layouts/main';
 
 const {ADMIN_ROLE} = require('../config/roles');
+const {ObjectId} = require("mongodb");
 
 
 /**
@@ -72,6 +74,37 @@ router.get('/login', async (req, res) => {
       }
     }
 )
+
+/**
+ * POST /
+ * User - Add Comment
+ */
+router.post('/addComment', async (req, res) => {
+  const userID = req.cookies.userID
+  const { comment, post_id} = req.body;
+
+
+  try {
+    await Post.updateOne(
+        {_id: new ObjectId(post_id)},
+        {
+          $push: {
+            comments: {
+              text: comment,
+              authorID: userID
+            }
+          }
+        }
+    );
+
+    res.redirect('/post/'+post_id);
+    res.status(201).json({ message: 'Comment Created'});
+  } catch (error) {
+    console.log(error);
+  }
+    }
+)
+
 /**
  * GET /
  * User - Register Page
@@ -145,6 +178,7 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign({ userId: user._id}, jwtSecret );
     res.cookie('token', token, { httpOnly: true });
     res.cookie('role', user.role, { httpOnly: true });
+    res.cookie('userID', user._id, { httpOnly: true });
     res.redirect('/');
 
   } catch (error) {
