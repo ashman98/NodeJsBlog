@@ -74,7 +74,7 @@ router.post('/admin', async (req, res) => {
     const token = jwt.sign({ userId: user._id}, jwtSecret );
     res.cookie('token', token, { httpOnly: true });
     res.cookie('role', user.role, { httpOnly: true });
-    res.redirect('/dashboard');
+    res.redirect('/admin/dashboard');
 
   } catch (error) {
     console.log(error);
@@ -146,7 +146,7 @@ router.post('/add-post', adminAuthMiddleware, async (req, res) => {
       });
 
       await Post.create(newPost);
-      res.redirect('/dashboard');
+      res.redirect('/admin/dashboard');
     } catch (error) {
       console.log(error);
     }
@@ -274,7 +274,7 @@ router.delete('/delete-post/:id', adminAuthMiddleware, async (req, res) => {
 
   try {
     await Post.deleteOne( { _id: req.params.id } );
-    res.redirect('/dashboard');
+    res.redirect('/admin/dashboard');
   } catch (error) {
     console.log(error);
   }
