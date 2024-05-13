@@ -279,6 +279,17 @@ router.get('/about', (req, res) => {
   });
 });
 
+/**
+ * GET /
+ * Contact
+ */
+router.get('/contact', (req, res) => {
+  res.render('contact', {
+    isAuthenticated: Boolean(req.cookies.token),
+    currentRoute: '/contact'
+  });
+});
+
 
 // function insertPostData () {
 //   Post.insertMany([
