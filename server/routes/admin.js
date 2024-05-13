@@ -4,6 +4,7 @@ const Post = require('../models/Post');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const {USER_ROLE} = require("../config/roles");
 
 const adminLayout = '../views/layouts/admin';
 const jwtSecret = process.env.JWT_SECRET;
@@ -57,6 +58,9 @@ router.get('/admin', async (req, res) => {
 */
 router.post('/admin', async (req, res) => {
   try {
+    if (Boolean(req.cookies.token) && req.cookies.role === ADMIN_ROLE){
+      res.redirect('/admin/dashboard');
+    }
     const { username, password } = req.body;
     
     const user = await User.findOne( { username } );
@@ -198,7 +202,7 @@ router.put('/edit-post/:id', adminAuthMiddleware, async (req, res) => {
       updatedAt: Date.now()
     });
 
-    res.redirect(`/edit-post/${req.params.id}`);
+    res.redirect(`/admin/dashboard`);
 
   } catch (error) {
     console.log(error);

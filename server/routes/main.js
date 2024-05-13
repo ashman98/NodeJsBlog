@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {Post, Comment} = require('../models/Post');
+const Post = require('../models/Post');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 const adminLayout = '../views/layouts/admin';
 const mainLayout = '../views/layouts/main';
 
-const {ADMIN_ROLE} = require('../config/roles');
+const {ADMIN_ROLE, USER_ROLE} = require('../config/roles');
 const {ObjectId} = require("mongodb");
 
 
@@ -63,6 +63,9 @@ router.get('', async (req, res) => {
  */
 router.get('/login', async (req, res) => {
       try {
+        if (Boolean(req.cookies.token) && req.cookies.role === USER_ROLE){
+          res.redirect('/');
+        }
         const locals = {
           title: "Sing in",
           description: "Simple Blog created with NodeJs, Express & MongoDb."
