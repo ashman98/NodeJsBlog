@@ -4,7 +4,6 @@
   "description": "Node JS Blog white MongoDB and Expres server",
   "main": "app.js",
   "scripts": {
-      "test-mongo": "node test-mongo.js",
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
