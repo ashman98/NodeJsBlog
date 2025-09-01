@@ -3,7 +3,7 @@ const connectDB = async () => {
   
   try {
     mongoose.set('strictQuery', false);
-    const conn = await mongoose.connect('mongodb+srv://ash888848:Meri.1998@cluster0.60izxol.mongodb.net/?retryWrites=true&w=majority');
+    const conn = await mongoose.connect(process.env.MONGODB_URI);
     console.log(`Database Connected: ${conn.connection.host}`);
   } catch (error) {
     console.log(error);
@@ -12,4 +12,5 @@ const connectDB = async () => {
 }
 
 module.exports = connectDB;
+
 
