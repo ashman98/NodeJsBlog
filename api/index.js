@@ -1,3 +1,13 @@
-const app = require('../app'); // импортируем Express-приложение
+const app = require('../app');
+const connectDB = require('../server/config/db');
 
-module.exports = app; // экспортируем для Vercel
+let isConnected = false;
+
+module.exports = async (req, res) => {
+  if (!isConnected) {
+    await connectDB();
+    isConnected = true;
+  }
+
+  return app(req, res);
+};
