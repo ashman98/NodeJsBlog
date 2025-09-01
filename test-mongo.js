@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const mongoUri = process.env.MONGODB_URI;
 
 async function testConnection() {
+  console.log('Starting MongoDB connection test...');
   try {
     await mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
     console.log('MongoDB connection successful!');
